@@ -443,6 +443,27 @@ public:
     return this->publish(this->makeConfigTopic(FPSTR(HA_ENTITY_SWITCH), F("heating_turbo")).c_str(), doc);
   }
 
+  bool publishSwitchHeating(bool enabledByDefault = true) {
+    JsonDocument doc;
+    doc[FPSTR(HA_AVAILABILITY)][FPSTR(HA_TOPIC)] = this->statusTopic.c_str();
+    doc[FPSTR(HA_ENABLED_BY_DEFAULT)] = enabledByDefault;
+    doc[FPSTR(HA_UNIQUE_ID)] = this->getUniqueIdWithPrefix(F("heating_enabled"));
+    doc[FPSTR(HA_DEFAULT_ENTITY_ID)] = this->getEntityIdWithPrefix(FPSTR(HA_ENTITY_SWITCH), F("heating_enabled"));
+    doc[FPSTR(HA_NAME)] = F("Central heating");
+    doc[FPSTR(HA_ICON)] = F("mdi:radiator");
+    doc[FPSTR(HA_STATE_TOPIC)] = this->settingsTopic.c_str();
+    doc[FPSTR(HA_STATE_ON)] = true;
+    doc[FPSTR(HA_STATE_OFF)] = false;
+    doc[FPSTR(HA_VALUE_TEMPLATE)] = F("{{ value_json.heating.enabled }}");
+    doc[FPSTR(HA_COMMAND_TOPIC)] = this->setSettingsTopic.c_str();
+    doc[FPSTR(HA_PAYLOAD_ON)] = F("{\"heating\": {\"enabled\" : true}}");
+    doc[FPSTR(HA_PAYLOAD_OFF)] = F("{\"heating\": {\"enabled\" : false}}");
+    doc[FPSTR(HA_EXPIRE_AFTER)] = this->expireAfter;
+    doc.shrinkToFit();
+
+    return this->publish(this->makeConfigTopic(FPSTR(HA_ENTITY_SWITCH), F("heating_enabled")).c_str(), doc);
+  }
+
   bool publishSwitchHeatingHysteresis(bool enabledByDefault = true) {
     JsonDocument doc;
     doc[FPSTR(HA_AVAILABILITY)][FPSTR(HA_TOPIC)] = this->statusTopic.c_str();
@@ -1375,6 +1396,27 @@ public:
   template <class CT>
   bool deleteEntities(CT category) {
     return this->publish(this->makeConfigTopic(category).c_str());
+  }
+
+  bool publishSwitchDhw(bool enabledByDefault = true) {
+    JsonDocument doc;
+    doc[FPSTR(HA_AVAILABILITY)][FPSTR(HA_TOPIC)] = this->statusTopic.c_str();
+    doc[FPSTR(HA_ENABLED_BY_DEFAULT)] = enabledByDefault;
+    doc[FPSTR(HA_UNIQUE_ID)] = this->getUniqueIdWithPrefix(F("dhw_enabled"));
+    doc[FPSTR(HA_DEFAULT_ENTITY_ID)] = this->getEntityIdWithPrefix(FPSTR(HA_ENTITY_SWITCH), F("dhw"));
+    doc[FPSTR(HA_NAME)] = F("Domestic hot water");
+    doc[FPSTR(HA_ICON)] = F("mdi:faucet");
+    doc[FPSTR(HA_STATE_TOPIC)] = this->settingsTopic.c_str();
+    doc[FPSTR(HA_STATE_ON)] = true;
+    doc[FPSTR(HA_STATE_OFF)] = false;
+    doc[FPSTR(HA_VALUE_TEMPLATE)] = F("{{ value_json.dhw.enabled }}");
+    doc[FPSTR(HA_COMMAND_TOPIC)] = this->setSettingsTopic.c_str();
+    doc[FPSTR(HA_PAYLOAD_ON)] = F("{\"dhw\": {\"enabled\" : true}}");
+    doc[FPSTR(HA_PAYLOAD_OFF)] = F("{\"dhw\": {\"enabled\" : false}}");
+    doc[FPSTR(HA_EXPIRE_AFTER)] = this->expireAfter;
+    doc.shrinkToFit();
+
+    return this->publish(this->makeConfigTopic(FPSTR(HA_ENTITY_SWITCH), F("dhw")).c_str(), doc);
   }
 
   bool deleteSwitchDhw() {

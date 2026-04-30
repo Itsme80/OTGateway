@@ -485,6 +485,7 @@ protected:
 
   void publishHaEntities() {
     // heating
+    this->haHelper->publishSwitchHeating();
     this->haHelper->publishSwitchHeatingTurbo(false);
     this->haHelper->publishSwitchHeatingHysteresis();
     this->haHelper->publishInputHeatingHysteresis(settings.system.unitSystem);
@@ -567,6 +568,7 @@ protected:
       _dhwSupport = settings.opentherm.options.dhwSupport;
 
       if (_dhwSupport) {
+        this->haHelper->publishSwitchDhw();
         this->haHelper->publishInputDhwMinTemp(settings.system.unitSystem);
         this->haHelper->publishInputDhwMaxTemp(settings.system.unitSystem);
         this->haHelper->publishDhwState();
